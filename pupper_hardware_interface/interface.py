@@ -55,6 +55,24 @@ class Interface:
                 return decoded_data
             try:
                 decoded_data = msgpack.unpackb(data)
+                self.robot_state.yaw = (
+                    decoded_data["yaw"] if "yaw" in decoded_data else None
+                )
+                self.robot_state.pitch = (
+                    decoded_data["pitch"] if "pitch" in decoded_data else None
+                )
+                self.robot_state.roll = (
+                    decoded_data["roll"] if "roll" in decoded_data else None
+                )
+                self.robot_state.yaw_rate = (
+                    decoded_data["yaw_rate"] if "yaw_rate" in decoded_data else None
+                )
+                self.robot_state.pitch_rate = (
+                    decoded_data["pitch_rate"] if "pitch_rate" in decoded_data else None
+                )
+                self.robot_state.roll_rate = (
+                    decoded_data["roll_rate"] if "roll_rate" in decoded_data else None
+                )
                 self.robot_state.position = (
                     decoded_data["pos"] if "pos" in decoded_data else None
                 )
