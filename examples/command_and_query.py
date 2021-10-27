@@ -33,6 +33,8 @@ last_print = time.time()
 try:
     while True:
         pupperv2.read_incoming_data()
+        print("Base orientation (YPR): ", pupperv2.robot_state.yaw, pupperv2.robot_state.pitch, pupperv2.robot_state.roll)
+        print("Base angular velocity: ", pupperv2.robot_state.yaw_rate, pupperv2.robot_state.pitch_rate, pupperv2.robot_state.roll_rate)
         print("Actuator positions: ", pupperv2.robot_state.position)
         print("Actuator velocities: ", pupperv2.robot_state.velocity)
 
