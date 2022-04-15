@@ -1,6 +1,6 @@
 # Installation
 ```bash
-git clone [this repo]
+git clone https://github.com/stanfordroboticsclub/Pupper-V2-Interface.git
 cd Pupper-V2-Interface
 pip3 install -e .
 ```
