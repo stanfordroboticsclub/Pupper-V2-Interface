@@ -14,6 +14,7 @@ class Interface:
     Maybe in the future we will not send commands to the robot
     when you create this object for more safe / intuitive behavior.
     """
+
     def __init__(
         self,
         port,
@@ -46,6 +47,9 @@ class Interface:
         )
 
         self.robot_state = robot_state.RobotState()
+
+        self.mode_mapping = {0: "idle", 1: "error", 2: "homing",
+                             3: "position_control", 4: "cartesian_position_control", 5: "current_control"}
 
     def read_incoming_data(self):
         decoded_data = None
@@ -94,6 +98,10 @@ class Interface:
                 self.robot_state.last_commanded_current = (
                     decoded_data["lcur"] if "lcur" in decoded_data else None
                 )
+                self.robot_state.mode = (
+                    self.mode_mapping[decoded_data["mode"]
+                                      ] if "mode" in decoded_data else None
+                )
             except ValueError as e:
                 print(e)
 
@@ -117,7 +125,8 @@ class Interface:
         max_current : [type]
             [description]
         """
-        self.send_dict({"cart_kp": kps, "cart_kd": kds, "max_current": max_current})
+        self.send_dict({"cart_kp": kps, "cart_kd": kds,
+                       "max_current": max_current})
 
     def activate(self):
         self.send_dict({"activations": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]})
@@ -126,6 +135,9 @@ class Interface:
         self.send_dict(
             {"idle": True, "activations": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
         )
+
+    def set_activations(self, activations):
+        self.send_dict({"activations": list(activations)})
 
     def zero_motors(self):
         self.send_dict({"zero": True})
@@ -143,6 +155,7 @@ class Interface:
         """
         motor_frame_angles = joint_angles
         joint_angles_vector = motor_frame_angles.flatten("F").tolist()
+        print("joint angles list: ", joint_angles_vector)
         self.send_dict({"pos": joint_angles_vector})
 
     def set_cartesian_positions(self, cartesian_positions):
